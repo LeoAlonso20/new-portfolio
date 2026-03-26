@@ -13,7 +13,11 @@ interface Props {
 const { project, locale, index = 0 } = Astro.props;
 const { data, slug } = project;
 const t = useTranslations(locale);
-const projectPath = getLocalizedPath(`/projects/${slug}`, locale);
+const projectSlug =
+  locale === "es" && slug === "es-expert-validator"
+    ? "expert-validator"
+    : slug;
+const projectPath = getLocalizedPath(`/projects/${projectSlug}`, locale);
 ---
 
 <a

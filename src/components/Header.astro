@@ -1,6 +1,6 @@
 ---
 import type { Locale } from "@/i18n";
-import { useTranslations, languages, getLocalizedPath } from "@/i18n";
+import { useTranslations, getLocalizedPath } from "@/i18n";
 import sign_profile from "@/assets/sign_profile.webp";
 
 interface Props {
@@ -19,7 +19,14 @@ const navItems = [
 ];
 
 const alternateLang = locale === "en" ? "es" : "en";
-const alternateLabel = languages[alternateLang];
+const alternateLabel =
+  locale === "es"
+    ? alternateLang === "en"
+      ? "Inglés"
+      : "Español"
+    : alternateLang === "es"
+      ? "Spanish"
+      : "English";
 const alternatePath =
   locale === "en"
     ? `/es${currentPath}`
@@ -28,7 +35,6 @@ const alternatePath =
 
 <header
   class="fixed top-0 inset-x-0 z-50 glass"
-  transition:persist
 >
   <nav class="container-wide flex items-center justify-between h-16">
     <a

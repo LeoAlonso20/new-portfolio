@@ -10,7 +10,12 @@ export async function getStaticPaths() {
   return projects
     .filter((p) => p.data.locale === "es")
     .map((project) => ({
-      params: { slug: project.slug },
+      params: {
+        slug:
+          project.slug === "es-expert-validator"
+            ? "expert-validator"
+            : project.slug,
+      },
       props: { project },
     }));
 }
@@ -105,10 +110,10 @@ const formattedDate = new Intl.DateTimeFormat("es-AR", {
       </div>
     </div>
 
-    {data.images && data.images.length > 0 && (
+    {data.gallery && data.gallery.length > 0 && (
       <div class="container-wide mb-16">
         <div class="grid md:grid-cols-2 gap-6">
-          {data.images.map((img, i) => (
+          {data.gallery.map((img, i) => (
             <div class="rounded-2xl overflow-hidden bg-surface-secondary border border-border-secondary">
               <Image
                 src={img}

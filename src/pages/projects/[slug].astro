@@ -1,0 +1,141 @@
+---
+import { getCollection, render } from "astro:content";
+import { Image } from "astro:assets";
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import { useTranslations, getLocalizedPath } from "@/i18n";
+import type { Locale } from "@/i18n";
+
+export async function getStaticPaths() {
+  const projects = await getCollection("projects");
+  return projects
+    .filter((p) => p.data.locale === "en")
+    .map((project) => ({
+      params: { slug: project.slug },
+      props: { project },
+    }));
+}
+
+const { project } = Astro.props;
+const { data, slug } = project;
+const { Content } = await render(project);
+const locale: Locale = "en";
+const t = useTranslations(locale);
+
+const formattedDate = new Intl.DateTimeFormat("en-US", {
+  year: "numeric",
+  month: "long",
+}).format(data.date);
+---
+
+<BaseLayout title={`${data.title} — Leandro Alonso`} locale={locale}>
+  <article>
+    <section class="pt-8 pb-12">
+      <div class="container-narrow">
+        <a
+          href={getLocalizedPath("/", locale) + "#projects"}
+          class="inline-flex items-center gap-2 text-body-sm text-content-secondary hover:text-content-primary transition-colors mb-8"
+        >
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5">
+            <path d="M13 8H3M7 4L3 8l4 4" />
+          </svg>
+          {t.projects.backToProjects}
+        </a>
+
+        <h1
+          class="text-display-md md:text-display-lg font-bold text-content-primary mb-4"
+          transition:name={`title-${slug}`}
+        >
+          {data.title}
+        </h1>
+
+        <p class="text-body-lg text-content-secondary mb-6 max-w-2xl">
+          {data.description}
+        </p>
+
+        <div class="flex flex-wrap items-center gap-4 mb-8">
+          <time class="text-body-sm text-content-tertiary">{formattedDate}</time>
+          <span class="text-content-tertiary">·</span>
+          <div class="flex flex-wrap gap-2">
+            {data.tags.map((tag) => (
+              <span class="text-caption px-2.5 py-1 rounded-full bg-surface-secondary text-content-tertiary border border-border-secondary">
+                {tag}
+              </span>
+            ))}
+          </div>
+        </div>
+
+        <div class="flex gap-3 mb-12">
+          {data.demoUrl && (
+            <a
+              href={data.demoUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              class="inline-flex items-center gap-2 px-5 py-2.5 bg-content-primary text-surface-primary rounded-full text-body-sm font-medium hover:opacity-90 transition-opacity"
+            >
+              {t.projects.viewDemo}
+              <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5">
+                <path d="M11 7.5V11a1 1 0 01-1 1H3.5a1 1 0 01-1-1V4.5a1 1 0 011-1H7M9 2h3v3M6.5 7.5L12 2" />
+              </svg>
+            </a>
+          )}
+          {data.repoUrl && (
+            <a
+              href={data.repoUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              class="inline-flex items-center gap-2 px-5 py-2.5 border border-border-primary rounded-full text-body-sm font-medium text-content-primary hover:bg-surface-secondary transition-colors"
+            >
+              {t.projects.viewCode}
+            </a>
+          )}
+        </div>
+      </div>
+    </section>
+
+    <div class="container-wide mb-16">
+      <div class="aspect-[2/1] rounded-2xl overflow-hidden bg-surface-secondary border border-border-secondary">
+        <Image
+          src={data.cover}
+          alt={data.title}
+          widths={[800, 1200, 1600]}
+          sizes="(max-width: 1280px) 100vw, 1280px"
+          class="w-full h-full object-cover"
+          transition:name={`img-${slug}`}
+        />
+      </div>
+    </div>
+
+    {data.images && data.images.length > 0 && (
+      <div class="container-wide mb-16">
+        <div class="grid md:grid-cols-2 gap-6">
+          {data.images.map((img, i) => (
+            <div class="rounded-2xl overflow-hidden bg-surface-secondary border border-border-secondary">
+              <Image
+                src={img}
+                alt={`${data.title} screenshot ${i + 1}`}
+                widths={[400, 800]}
+                sizes="(max-width: 768px) 100vw, 50vw"
+                class="w-full h-full object-cover"
+              />
+            </div>
+          ))}
+        </div>
+      </div>
+    )}
+
+    <div class="container-narrow pb-24">
+      <div class="prose prose-lg max-w-none
+        prose-headings:text-content-primary prose-headings:font-semibold
+        prose-p:text-content-secondary prose-p:leading-relaxed
+        prose-a:text-accent prose-a:no-underline hover:prose-a:underline
+        prose-strong:text-content-primary
+        prose-code:text-accent prose-code:bg-surface-secondary prose-code:px-1.5 prose-code:py-0.5 prose-code:rounded-md prose-code:text-body-sm prose-code:before:content-none prose-code:after:content-none
+        prose-pre:bg-surface-secondary prose-pre:border prose-pre:border-border-secondary prose-pre:rounded-xl
+        prose-img:rounded-xl prose-img:border prose-img:border-border-secondary
+        prose-li:text-content-secondary
+        prose-blockquote:border-accent prose-blockquote:text-content-secondary">
+        <Content />
+      </div>
+    </div>
+  </article>
+</BaseLayout>

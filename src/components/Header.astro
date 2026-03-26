@@ -1,0 +1,119 @@
+---
+import type { Locale } from "@/i18n";
+import { useTranslations, languages, getLocalizedPath } from "@/i18n";
+import sign_profile from "@/assets/sign_profile.webp";
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+const t = useTranslations(locale);
+const currentPath = Astro.url.pathname;
+
+const navItems = [
+  { label: t.nav.projects, href: "#projects" },
+  { label: t.nav.skills, href: "#skills" },
+  { label: t.nav.about, href: "#about" },
+  { label: t.nav.contact, href: "#contact" },
+];
+
+const alternateLang = locale === "en" ? "es" : "en";
+const alternateLabel = languages[alternateLang];
+const alternatePath =
+  locale === "en"
+    ? `/es${currentPath}`
+    : currentPath.replace(/^\/es/, "") || "/";
+---
+
+<header
+  class="fixed top-0 inset-x-0 z-50 glass"
+  transition:persist
+>
+  <nav class="container-wide flex items-center justify-between h-16">
+    <a
+      href={getLocalizedPath("/", locale)}
+      class="block hover:opacity-80 transition-opacity"
+      aria-label="Leandro Alonso"
+    >
+      <img
+        src={sign_profile.src}
+        alt="Leandro Alonso"
+        class="h-10 w-auto dark:invert"
+      />
+    </a>
+
+    <div class="hidden md:flex items-center gap-8">
+      {
+        navItems.map((item) => (
+          <a
+            href={item.href}
+            class="text-body-sm text-content-secondary hover:text-content-primary transition-colors link-underline"
+          >
+            {item.label}
+          </a>
+        ))
+      }
+    </div>
+
+    <div class="flex items-center gap-4">
+      <a
+        href={alternatePath}
+        class="text-body-sm text-content-tertiary hover:text-content-primary transition-colors px-2 py-1 rounded-md hover:bg-surface-secondary"
+      >
+        {alternateLabel}
+      </a>
+
+      <button
+        id="mobile-menu-toggle"
+        class="md:hidden p-2 text-content-secondary hover:text-content-primary transition-colors"
+        aria-label="Toggle navigation"
+        aria-expanded="false"
+      >
+        <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5">
+          <line x1="3" y1="6" x2="17" y2="6" />
+          <line x1="3" y1="10" x2="17" y2="10" />
+          <line x1="3" y1="14" x2="17" y2="14" />
+        </svg>
+      </button>
+    </div>
+  </nav>
+
+  <div id="mobile-menu" class="md:hidden hidden border-t border-border-primary">
+    <div class="container-wide py-4 flex flex-col gap-3">
+      {
+        navItems.map((item) => (
+          <a
+            href={item.href}
+            class="text-body-md text-content-secondary hover:text-content-primary transition-colors py-1"
+          >
+            {item.label}
+          </a>
+        ))
+      }
+    </div>
+  </div>
+</header>
+
+<div class="h-16" aria-hidden="true"></div>
+
+<script>
+  document.addEventListener("astro:page-load", () => {
+    const toggle = document.getElementById("mobile-menu-toggle");
+    const menu = document.getElementById("mobile-menu");
+    if (!toggle || !menu) return;
+
+    toggle.addEventListener("click", () => {
+      const expanded = toggle.getAttribute("aria-expanded") === "true";
+      toggle.setAttribute("aria-expanded", String(!expanded));
+      menu.classList.toggle("hidden");
+    });
+
+    menu.querySelectorAll("a").forEach((link) => {
+      link.addEventListener("click", () => {
+        menu.classList.add("hidden");
+        toggle.setAttribute("aria-expanded", "false");
+      });
+    });
+  });
+</script>

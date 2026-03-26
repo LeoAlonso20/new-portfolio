@@ -1,0 +1,50 @@
+---
+title: "El Meta-Proyecto"
+description: "Un análisis profundo de la arquitectura, decisiones de rendimiento y patrones de optimización detrás de este portafolio — construido con Astro, React Islands y Tailwind CSS."
+summary: "Documentando la creación de este portafolio como caso de estudio en arquitectura web moderna."
+date: 2026-03-01
+tags: ["Astro", "React", "Tailwind CSS", "Framer Motion", "TypeScript", "Vercel"]
+cover: "./images/meta-project-cover.svg"
+repoUrl: "https://github.com/leandroalonso/portfolio"
+demoUrl: "https://leandroalonso.dev"
+featured: true
+locale: "es"
+order: 1
+---
+
+## ¿Por Qué Construir un Portafolio Desde Cero?
+
+Cada decisión en este portafolio es intencional. En lugar de recurrir a una SPA monolítica en React o un CMS pesado, elegí una arquitectura que prioriza lo que más importa para un portafolio: **velocidad, accesibilidad y mantenibilidad**.
+
+El resultado es un sitio que envía prácticamente cero JavaScript por defecto, hidrata componentes interactivos bajo demanda y logra puntuaciones perfectas en Lighthouse en todas las categorías.
+
+## Visión General de la Arquitectura
+
+La base es la **Arquitectura de Islas de Astro** — un paradigma donde la página se renderiza como HTML estático en tiempo de compilación, y solo las piezas interactivas (componentes React con animaciones Framer Motion) se hidratan en el cliente.
+
+Esto significa que el navegador recibe un documento HTML completamente renderizado de inmediato. Sin spinners de carga, sin saltos de layout, sin esperar a que un bundle de JavaScript pinte píxeles en pantalla.
+
+### Decisiones Arquitectónicas Clave
+
+- **Generación de Sitio Estático (SSG)** para máximo rendimiento y cacheabilidad en CDN
+- **Islas React** limitadas exclusivamente a UI interactiva — animaciones de scroll, modales y comportamientos dinámicos
+- **Content Collections** con validación Zod para datos de proyecto con seguridad de tipos
+- **MDX** para casos de estudio ricos que pueden embeber componentes React en vivo
+- **View Transitions API** para navegación fluida tipo SPA sin un router del lado del cliente
+
+## Patrones de Optimización de Rendimiento
+
+### Pipeline de Imágenes
+
+Cada imagen en este portafolio pasa por el pipeline de optimización de imágenes integrado en Astro. El componente `<Image />` genera automáticamente atributos `srcset` responsivos, convierte a formatos modernos (WebP/AVIF) y aplica carga lazy con atributos de dimensión apropiados para eliminar el Cumulative Layout Shift.
+
+### View Transitions
+
+La transición entre la grilla de tarjetas de proyecto y la página de detalle usa la **View Transitions API** con directivas `transition:name` compartidas. La imagen de portada y el título se transforman fluidamente desde su posición en la tarjeta hasta la sección hero de la página de detalle — sin necesidad de una librería de animación JavaScript.
+
+## Resultados
+
+- **100/100** en puntuación de rendimiento de Lighthouse
+- **0ms** de Total Blocking Time
+- **< 50KB** de peso total de página (excluyendo imágenes)
+- **Sub-segundo** en Time to Interactive en conexiones 3G

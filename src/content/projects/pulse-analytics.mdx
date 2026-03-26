@@ -1,0 +1,88 @@
+---
+title: "Pulse Analytics"
+description: "An interactive data visualization dashboard that transforms raw business metrics into actionable insights through dynamic charts, real-time data streams, and customizable reporting."
+summary: "Business intelligence dashboard with real-time data visualization and reporting."
+date: 2025-08-20
+tags: ["React", "D3.js", "TypeScript", "Recharts", "Tailwind CSS", "REST API"]
+cover: "./images/pulse-analytics-cover.svg"
+repoUrl: "https://github.com/leandroalonso/pulse-analytics"
+featured: true
+locale: "en"
+order: 3
+---
+
+## Overview
+
+Pulse Analytics is a business intelligence dashboard designed for startups and mid-size companies that need clear visibility into their key metrics without the complexity and cost of enterprise BI tools.
+
+The application ingests data from multiple sources — databases, REST APIs, CSV uploads — and renders it through a library of interactive, composable visualization widgets.
+
+## Design Philosophy
+
+The dashboard follows a **data-ink ratio** principle inspired by Edward Tufte: every pixel should serve the data. No decorative gradients, no 3D chart effects, no visual noise. Clean grids, purposeful color encoding, and generous whitespace let the numbers speak for themselves.
+
+### Color System
+
+The visualization palette uses a perceptually uniform color scale derived from the CIELAB color space. This ensures that:
+
+- Color differences are perceived equally across the spectrum
+- Charts remain readable for users with color vision deficiencies
+- Print output maintains legibility in grayscale
+
+## Technical Implementation
+
+### Visualization Engine
+
+The charting layer combines **Recharts** for standard chart types (line, bar, area, pie) with custom **D3.js** implementations for specialized visualizations (treemaps, sankey diagrams, geographic heatmaps).
+
+Each chart component follows a declarative API:
+
+```tsx
+<MetricChart
+  data={revenueData}
+  type="area"
+  dimensions={{ x: "date", y: "revenue" }}
+  comparison={{ enabled: true, period: "previous_month" }}
+/>
+```
+
+### Data Pipeline
+
+Raw data passes through a transformation pipeline before reaching the visualization layer:
+
+1. **Ingestion** — Connectors normalize data from heterogeneous sources
+2. **Validation** — Zod schemas enforce structural and type constraints
+3. **Aggregation** — Time-series data is bucketed by configurable intervals
+4. **Caching** — Computed aggregations are memoized to avoid redundant calculations
+
+### Dashboard Composition
+
+Users compose dashboards by arranging widgets on a **CSS Grid-based layout system** with drag-and-drop repositioning and resize handles. Layout state persists to the backend, enabling shared team dashboards.
+
+## Key Features
+
+### Real-Time Data Streams
+
+For metrics that update frequently (active users, transaction volume, error rates), the dashboard maintains a WebSocket connection that pushes incremental updates. Charts animate smoothly between data points rather than re-rendering from scratch.
+
+### Comparative Analysis
+
+Every metric supports period-over-period comparison. Toggle a comparison overlay to see this month's revenue against last month, this quarter against the same quarter last year. Delta values highlight trends with color-coded indicators.
+
+### Export and Reporting
+
+Dashboards can be exported as:
+
+- **PDF reports** with automatic pagination and table of contents
+- **PNG/SVG** snapshots of individual charts
+- **CSV** raw data exports for further analysis in external tools
+
+Scheduled reports deliver PDF summaries to stakeholders via email on configurable cadences.
+
+## Accessibility
+
+All charts include screen reader descriptions generated from the underlying data. Interactive elements support keyboard navigation. High-contrast mode ensures readability in all lighting conditions.
+
+## Impact
+
+Pilot users reported a **40% reduction** in time spent preparing weekly metric reviews, and a **60% increase** in data-driven decision confidence among non-technical stakeholders.

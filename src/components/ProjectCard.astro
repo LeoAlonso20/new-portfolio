@@ -1,0 +1,67 @@
+---
+import { Image } from "astro:assets";
+import type { CollectionEntry } from "astro:content";
+import type { Locale } from "@/i18n";
+import { useTranslations, getLocalizedPath } from "@/i18n";
+
+interface Props {
+  project: CollectionEntry<"projects">;
+  locale: Locale;
+  index?: number;
+}
+
+const { project, locale, index = 0 } = Astro.props;
+const { data, slug } = project;
+const t = useTranslations(locale);
+const projectPath = getLocalizedPath(`/projects/${slug}`, locale);
+---
+
+<a
+  href={projectPath}
+  class="group block rounded-2xl border border-border-secondary hover:border-border-primary bg-surface-primary hover:bg-surface-secondary transition-all duration-500 overflow-hidden"
+  style={`animation-delay: ${index * 100}ms`}
+>
+  <div class="aspect-[16/10] overflow-hidden bg-surface-secondary">
+    <Image
+      src={data.cover}
+      alt={data.title}
+      widths={[400, 800]}
+      sizes="(max-width: 768px) 100vw, 50vw"
+      class="w-full h-full object-cover group-hover:scale-[1.02] transition-transform duration-700 ease-out"
+      transition:name={`img-${slug}`}
+    />
+  </div>
+
+  <div class="p-6">
+    <h3
+      class="text-heading-lg font-semibold text-content-primary mb-2 group-hover:text-accent transition-colors"
+      transition:name={`title-${slug}`}
+    >
+      {data.title}
+    </h3>
+
+    <p class="text-body-sm text-content-secondary mb-4 line-clamp-2">
+      {data.description}
+    </p>
+
+    <div class="flex flex-wrap gap-2">
+      {data.tags.slice(0, 4).map((tag) => (
+        <span class="text-caption px-2.5 py-1 rounded-full bg-surface-secondary text-content-tertiary border border-border-secondary">
+          {tag}
+        </span>
+      ))}
+      {data.tags.length > 4 && (
+        <span class="text-caption px-2.5 py-1 text-content-tertiary">
+          +{data.tags.length - 4}
+        </span>
+      )}
+    </div>
+
+    <div class="mt-4 flex items-center gap-1.5 text-body-sm text-accent font-medium opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+      {t.projects.viewProject}
+      <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5">
+        <path d="M2 7h10M8 3l4 4-4 4" />
+      </svg>
+    </div>
+  </div>
+</a>

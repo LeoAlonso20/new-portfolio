@@ -1,0 +1,46 @@
+---
+title: "TaskFlow"
+description: "Una aplicación de gestión de proyectos en tiempo real construida con React, TypeScript y un backend con WebSockets. Incluye tableros kanban con drag-and-drop, colaboración en equipo y triggers de flujo automatizado."
+summary: "Herramienta full-stack de gestión de proyectos con capacidades de colaboración en tiempo real."
+date: 2025-11-15
+tags: ["React", "TypeScript", "Node.js", "PostgreSQL", "WebSockets", "Tailwind CSS"]
+cover: "./images/taskflow-cover.svg"
+repoUrl: "https://github.com/leandroalonso/taskflow"
+demoUrl: "https://taskflow-demo.vercel.app"
+featured: true
+locale: "es"
+order: 2
+---
+
+## El Problema
+
+Los equipos modernos necesitan más que una lista de tareas estática. Necesitan un espacio de trabajo que se adapte a su flujo, refleje cambios en tiempo real y reduzca la fricción entre la planificación y la ejecución.
+
+TaskFlow nació de la frustración de usar herramientas de gestión de proyectos que se sienten lentas, requieren recargas constantes y fuerzan a los equipos a flujos de trabajo rígidos.
+
+## Arquitectura Técnica
+
+### Frontend
+
+La aplicación cliente es una **SPA en React** construida con TypeScript y estructurada alrededor de una capa de gestión de estado personalizada usando React Context y `useReducer`. Este enfoque proporciona la predictibilidad de Redux sin la sobrecarga de boilerplate.
+
+La implementación del tablero kanban usa `@dnd-kit` para interacciones de drag-and-drop accesibles y performantes. Cada movimiento de tarjeta dispara una actualización optimista — la UI responde inmediatamente mientras la sincronización con el servidor ocurre en segundo plano.
+
+### Motor en Tiempo Real
+
+Las conexiones WebSocket alimentan las funcionalidades colaborativas. Cuando un miembro del equipo mueve una tarea, crea un comentario o actualiza un estado, cada cliente conectado recibe el cambio en milisegundos.
+
+### Capa de Datos
+
+PostgreSQL sirve como almacén de datos principal con un esquema diseñado para patrones de consulta eficientes, incluyendo vistas materializadas para agregaciones de dashboard y políticas de seguridad a nivel de fila para aislamiento de datos multi-tenant.
+
+## Funcionalidades Clave
+
+- **Kanban con Drag-and-Drop** — Reordenamiento de columnas, movimiento entre columnas y operaciones batch
+- **Flujos Automatizados** — Reglas trigger-acción configurables por el usuario
+- **Filtros Inteligentes** — Vistas guardadas y compartibles con filtros dinámicos
+- **Scrolling Virtual** — Rendimiento fluido con cientos de tarjetas
+
+## Lecciones Aprendidas
+
+El insight más valioso de construir TaskFlow fue que las funcionalidades en tiempo real demandan un enfoque fundamentalmente diferente para la gestión de estado. Las actualizaciones optimistas, resolución de conflictos y ordenamiento de eventos son desafíos que no existen en aplicaciones tradicionales de request-response.

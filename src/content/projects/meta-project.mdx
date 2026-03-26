@@ -1,0 +1,70 @@
+---
+title: "The Meta-Project"
+description: "A deep dive into the architecture, performance decisions, and optimization patterns behind this very portfolio — built with Astro, React Islands, and Tailwind CSS."
+summary: "Documenting the creation of this portfolio as a case study in modern web architecture."
+date: 2026-03-01
+tags: ["Astro", "React", "Tailwind CSS", "Framer Motion", "TypeScript", "Vercel"]
+cover: "./images/meta-project-cover.svg"
+repoUrl: "https://github.com/leandroalonso/portfolio"
+demoUrl: "https://leandroalonso.dev"
+featured: true
+locale: "en"
+order: 1
+---
+
+## Why Build a Portfolio From Scratch?
+
+Every decision in this portfolio is intentional. Rather than reaching for a monolithic React SPA or a heavy CMS, I chose an architecture that prioritizes what matters most for a portfolio: **speed, accessibility, and maintainability**.
+
+The result is a site that ships near-zero JavaScript by default, hydrates interactive components on demand, and achieves perfect Lighthouse scores across all categories.
+
+## Architecture Overview
+
+The foundation is **Astro's Islands Architecture** — a paradigm where the page is rendered as static HTML at build time, and only the interactive pieces (React components with Framer Motion animations) are hydrated on the client.
+
+This means the browser receives a fully-rendered HTML document immediately. No loading spinners, no layout shifts, no waiting for a JavaScript bundle to paint pixels on screen.
+
+### Key Architectural Decisions
+
+- **Static Site Generation (SSG)** for maximum performance and CDN cacheability
+- **React Islands** scoped exclusively to interactive UI — scroll animations, modals, and dynamic behaviors
+- **Content Collections** with Zod validation for type-safe project data
+- **MDX** for rich project case studies that can embed live React components
+- **View Transitions API** for seamless, SPA-like page navigation without a client-side router
+
+## The Islands Architecture in Practice
+
+```astro
+<HeroSection client:load ... />
+<ProjectsSection />
+<SkillsSection client:visible ... />
+```
+
+Notice the hydration directives: `client:load` for above-the-fold interactive content, `client:visible` for below-the-fold sections that only hydrate when scrolled into view. Static sections like `ProjectsSection` ship zero JavaScript.
+
+## Performance Optimization Patterns
+
+### Image Pipeline
+
+Every image in this portfolio passes through Astro's built-in image optimization pipeline. The `<Image />` component automatically generates responsive `srcset` attributes, converts to modern formats (WebP/AVIF), and applies lazy loading with proper dimension attributes to eliminate Cumulative Layout Shift.
+
+### View Transitions
+
+The transition between the project card grid and the detail page uses the **View Transitions API** with shared `transition:name` directives. The cover image and title morph seamlessly from their position in the card to the hero section of the detail page — no JavaScript animation library required.
+
+### Font Loading Strategy
+
+Inter is loaded via Google Fonts with `display=swap` and `preconnect` hints, ensuring text remains visible during font load while preventing layout shifts once the custom font renders.
+
+## Internationalization
+
+The portfolio supports English and Spanish from day one using Astro's native i18n routing. UI strings are stored in typed dictionaries, and content is organized by locale within the Content Collections system. Switching languages preserves the user's current page context.
+
+## Results
+
+- **100/100** Lighthouse Performance score
+- **0ms** Total Blocking Time
+- **< 50KB** total page weight (excluding images)
+- **Sub-second** Time to Interactive on 3G connections
+
+This portfolio isn't just a showcase — it's a statement about what modern web development should feel like.

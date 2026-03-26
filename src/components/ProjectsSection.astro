@@ -1,0 +1,31 @@
+---
+import type { CollectionEntry } from "astro:content";
+import type { Locale } from "@/i18n";
+import { useTranslations } from "@/i18n";
+import ProjectCard from "./ProjectCard.astro";
+
+interface Props {
+  projects: CollectionEntry<"projects">[];
+  locale: Locale;
+}
+
+const { projects, locale } = Astro.props;
+const t = useTranslations(locale);
+---
+
+<section id="projects" class="section-spacing">
+  <div class="container-narrow">
+    <h2 class="text-display-sm font-bold text-content-primary mb-3">
+      {t.projects.title}
+    </h2>
+    <p class="text-body-lg text-content-secondary mb-16 max-w-2xl">
+      {t.projects.subtitle}
+    </p>
+
+    <div class="grid md:grid-cols-2 gap-6">
+      {projects.map((project, index) => (
+        <ProjectCard project={project} locale={locale} index={index} />
+      ))}
+    </div>
+  </div>
+</section>

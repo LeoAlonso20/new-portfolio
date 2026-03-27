@@ -12,9 +12,37 @@ import type { Locale } from "@/i18n";
 const locale: Locale = "es";
 const t = useTranslations(locale);
 
+const desiredOrder = [
+  "es-meta-project",
+  "es-validador-experto",
+  "es-info-app",
+  "es-lineo-app",
+  "es-home-info",
+  "es-lineo-home",
+];
+
+const hiddenSlugs = [
+  "es-taskflow",
+  "es-pulse-analytics",
+  "taskflow",
+  "pulse-analytics",
+];
+
 const projects = (await getCollection("projects"))
-  .filter((p) => p.data.locale === locale && p.data.featured)
-  .sort((a, b) => a.data.order - b.data.order);
+  .filter(
+    (p) =>
+      p.data.locale === locale &&
+      p.data.featured &&
+      !hiddenSlugs.includes(p.id)
+  )
+  .sort((a, b) => {
+    const aIdx = desiredOrder.indexOf(a.id);
+    const bIdx = desiredOrder.indexOf(b.id);
+    if (aIdx === -1 && bIdx === -1) return 0;
+    if (aIdx === -1) return 1;
+    if (bIdx === -1) return -1;
+    return aIdx - bIdx;
+  });
 ---
 
 <BaseLayout locale={locale}>

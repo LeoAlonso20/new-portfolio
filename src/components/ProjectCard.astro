@@ -16,7 +16,15 @@ const t = useTranslations(locale);
 const projectSlug =
   locale === "es" && slug === "es-expert-validator"
     ? "expert-validator"
-    : slug;
+    : locale === "es" && slug === "es-lineo-app"
+      ? "lineo-app"
+      : locale === "es" && slug === "es-info-app"
+        ? "info-app"
+        : locale === "es" && slug === "es-home-info"
+          ? "home-info"
+          : locale === "es" && slug === "es-lineo-home"
+            ? "lineo-home"
+      : slug;
 const projectPath = getLocalizedPath(`/projects/${projectSlug}`, locale);
 ---
 

@@ -14,6 +14,14 @@ export async function getStaticPaths() {
         slug:
           project.slug === "es-expert-validator"
             ? "expert-validator"
+            : project.slug === "es-lineo-app"
+              ? "lineo-app"
+              : project.slug === "es-info-app"
+                ? "info-app"
+                : project.slug === "es-home-info"
+                  ? "home-info"
+                  : project.slug === "es-lineo-home"
+                    ? "lineo-home"
             : project.slug,
       },
       props: { project },
